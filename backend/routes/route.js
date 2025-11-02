@@ -25,11 +25,15 @@ const {
 const { subjectCreate, classSubjects, deleteSubjectsByClass, getSubjectDetail, deleteSubject, freeSubjectList, allSubjects, deleteSubjects } = require('../controllers/subject-controller.js');
 const { teacherRegister, teacherLogIn, getTeachers, getTeacherDetail, deleteTeachers, deleteTeachersByClass, deleteTeacher, updateTeacherSubject, teacherAttendance } = require('../controllers/teacher-controller.js');
 const { uploadFile } = require('../controllers/upload-controller.js');
+const { adminuploadFile } = require('../controllers/adminupload-controller.js');
+
 
 
 
 
 router.post('/UploadFile', uploadFile);
+router.post('/adminUploadFile', adminuploadFile);
+
 
 // Admin
 router.post('/AdminReg', adminRegister);
