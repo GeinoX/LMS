@@ -1,6 +1,6 @@
 #  Système de Gestion de Fichiers - School Management System
 
-## 🎯 Vue d'ensemble
+##  Vue d'ensemble
 
 Ce système permet aux **Admins** et **Teachers** d'uploader des fichiers pour les subjects avec compression automatique, et permet aux **Admins**, **Teachers** et **Students** de télécharger ces fichiers.
 
@@ -156,7 +156,7 @@ frontend/src/
 | Archives | zip, rar, 7z | ✅ jszip, pako, fflate |
 | Autres | doc, xls, txt, etc. | ✅ fflate (generic) |
 
-## 🎨 Design et UX
+##  Design et UX
 
 ### Animations et Effets
 
