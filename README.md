@@ -102,7 +102,7 @@ frontend/src/
     └── fileUploadStyles.js         # Styles modernes et animations
 ```
 
-## 🚀 Utilisation
+##  Utilisation
 
 ### 1. Admin - Créer un Subject avec Fichiers
 
@@ -239,7 +239,7 @@ Pour tester le système:
 - Le système fonctionne avec tous types de fichiers
 - Les fichiers compressés conservent leur nom original
 
-## 🔄 Améliorations Futures
+##  Améliorations Futures
 
 - [ ] Prévisualisation des fichiers (images, PDF)
 - [ ] Partage de fichiers entre classes
