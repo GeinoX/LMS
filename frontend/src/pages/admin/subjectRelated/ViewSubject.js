@@ -14,6 +14,9 @@ import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 
+import SubjectFiles from '../../../components/SubjectFiles';
+import TeacherExamResponses from '../../teacher/TeacherExamResponses';
+
 const ViewSubject = () => {
   const navigate = useNavigate()
   const params = useParams()
@@ -47,13 +50,15 @@ const ViewSubject = () => {
     { id: 'name', label: 'Name', minWidth: 170 },
   ]
 
-  const studentRows = sclassStudents.map((student) => {
-    return {
-      rollNum: student.rollNum,
-      name: student.name,
-      id: student._id,
-    };
-  })
+  const studentRows = sclassStudents && Array.isArray(sclassStudents) 
+    ? sclassStudents.map((student) => {
+        return {
+          rollNum: student.rollNum,
+          name: student.name,
+          id: student._id,
+        };
+      })
+    : [];
 
   const StudentsAttendanceButtonHaver = ({ row }) => {
     return (
@@ -142,7 +147,14 @@ const ViewSubject = () => {
   }
 
   const SubjectDetailsSection = () => {
-    const numberOfStudents = sclassStudents.length;
+    const numberOfStudents = sclassStudents && Array.isArray(sclassStudents) ? sclassStudents.length : 0;
+
+    // CORRECTION: Vérifications de sécurité pour subjectDetails
+    const className = subjectDetails && 
+                     subjectDetails.sclassName && 
+                     typeof subjectDetails.sclassName === 'object'
+        ? subjectDetails.sclassName.sclassName 
+        : 'Unknown Class';
 
     return (
       <>
@@ -150,30 +162,49 @@ const ViewSubject = () => {
           Subject Details
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Subject Name : {subjectDetails && subjectDetails.subName}
+          Subject Name : {subjectDetails ? subjectDetails.subName : 'Loading...'}
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Subject Code : {subjectDetails && subjectDetails.subCode}
+          Subject Code : {subjectDetails ? subjectDetails.subCode : 'Loading...'}
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Subject Sessions : {subjectDetails && subjectDetails.sessions}
+          Subject Sessions : {subjectDetails ? subjectDetails.sessions : 'Loading...'}
         </Typography>
         <Typography variant="h6" gutterBottom>
           Number of Students: {numberOfStudents}
         </Typography>
         <Typography variant="h6" gutterBottom>
-          Class Name : {subjectDetails && subjectDetails.sclassName && subjectDetails.sclassName.sclassName}
+          Class Name : {className}
         </Typography>
         {subjectDetails && subjectDetails.teacher ?
           <Typography variant="h6" gutterBottom>
             Teacher Name : {subjectDetails.teacher.name}
           </Typography>
           :
-          <GreenButton variant="contained"
-            onClick={() => navigate("/Admin/teachers/addteacher/" + subjectDetails._id)}>
-            Add Subject Teacher
-          </GreenButton>
+          subjectDetails && (
+            <GreenButton variant="contained"
+              onClick={() => navigate("/Admin/teachers/addteacher/" + subjectDetails._id)}>
+              Add Subject Teacher
+            </GreenButton>
+          )
         }
+        
+        {/* Section des fichiers */}
+        {subjectDetails && subjectDetails.files && (
+          <Box sx={{ mt: 3 }}>
+            <SubjectFiles subjectId={subjectID} files={subjectDetails.files} />
+          </Box>
+        )}
+
+        {/* Section des réponses d'examen pour les admins */}
+        {subjectDetails && subjectDetails.type === 'Exam' && (
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Exam Responses
+            </Typography>
+            <TeacherExamResponses />
+          </Box>
+        )}
       </>
     );
   }
@@ -181,7 +212,7 @@ const ViewSubject = () => {
   return (
     <>
       {subloading ?
-        < div > Loading...</div >
+        <div>Loading...</div>
         :
         <>
           <Box sx={{ width: '100%', typography: 'body1', }} >

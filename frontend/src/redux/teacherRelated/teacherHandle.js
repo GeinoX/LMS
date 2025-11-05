@@ -36,11 +36,16 @@ export const getTeacherDetails = (id) => async (dispatch) => {
     }
 }
 
-export const updateTeachSubject = (teacherId, teachSubject) => async (dispatch) => {
+export const updateTeachSubject = (teacherId, teachSubjectOrArray) => async (dispatch) => {
     dispatch(getRequest());
 
+    // Accept either a single subject id/object or an array of them.
+    const teachSubjects = Array.isArray(teachSubjectOrArray)
+        ? teachSubjectOrArray
+        : (teachSubjectOrArray ? [teachSubjectOrArray] : []);
+
     try {
-        await axios.put(`${process.env.REACT_APP_BASE_URL}/TeacherSubject`, { teacherId, teachSubject }, {
+        await axios.put(`${process.env.REACT_APP_BASE_URL}/TeacherSubject`, { teacherId, teachSubjects }, {
             headers: { 'Content-Type': 'application/json' },
         });
         dispatch(postDone());

@@ -7,6 +7,9 @@ import StudentDashboard from './pages/student/StudentDashboard';
 import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import LoginPage from './pages/LoginPage';
 import AdminRegisterPage from './pages/admin/AdminRegisterPage';
+import StudentRegisterPage from './pages/StudentRegisterPage';
+import TeacherRegisterPage from './pages/TeacherRegisterPage';
+import Logout from './pages/Logout';
 import ChooseUser from './pages/ChooseUser';
 
 const App = () => {
@@ -25,6 +28,10 @@ const App = () => {
           <Route path="/Teacherlogin" element={<LoginPage role="Teacher" />} />
 
           <Route path="/Adminregister" element={<AdminRegisterPage />} />
+          <Route path="/Studentregister" element={<StudentRegisterPage />} />
+          <Route path="/Teacherregister" element={<TeacherRegisterPage />} />
+
+          <Route path="/logout" element={<Logout />} />
 
           <Route path='*' element={<Navigate to="/" />} />
         </Routes>}

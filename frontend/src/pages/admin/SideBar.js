@@ -11,6 +11,8 @@ import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
 import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccountOutlined';
 import ReportIcon from '@mui/icons-material/Report';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import FolderIcon from '@mui/icons-material/Folder';
 
 const SideBar = () => {
     const location = useLocation();
@@ -41,6 +43,12 @@ const SideBar = () => {
                     </ListItemIcon>
                     <ListItemText primary="Teachers" />
                 </ListItemButton>
+                <ListItemButton component={Link} to="/Admin/teachers/bulkassign">
+                    <ListItemIcon>
+                        <GroupAddIcon color={location.pathname.startsWith("/Admin/teachers/bulkassign") ? 'primary' : 'inherit'} />
+                    </ListItemIcon>
+                    <ListItemText primary="Bulk Assign Teachers" />
+                </ListItemButton>
                 <ListItemButton component={Link} to="/Admin/students">
                     <ListItemIcon>
                         <PersonOutlineIcon color={location.pathname.startsWith("/Admin/students") ? 'primary' : 'inherit'} />
@@ -58,6 +66,12 @@ const SideBar = () => {
                         <ReportIcon color={location.pathname.startsWith("/Admin/complains") ? 'primary' : 'inherit'} />
                     </ListItemIcon>
                     <ListItemText primary="Complains" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Admin/subject/examResponses">
+                    <ListItemIcon>
+                        <FolderIcon color={location.pathname.startsWith("/Admin/subject/examResponses") ? 'primary' : 'inherit'} />
+                    </ListItemIcon>
+                    <ListItemText primary="Exam Responses" />
                 </ListItemButton>
             </React.Fragment>
             <Divider sx={{ my: 1 }} />

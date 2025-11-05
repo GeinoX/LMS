@@ -6,7 +6,7 @@ import {
     Paper, Table, TableBody, TableContainer,
     TableHead, TablePagination, Button, Box, IconButton,
 } from '@mui/material';
-import { deleteUser } from '../../../redux/userRelated/userHandle';
+// deleteUser import removed - delete action is currently disabled in UI
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';
 import { StyledTableCell, StyledTableRow } from '../../../components/styles';
 import { BlueButton, GreenButton } from '../../../components/buttonStyles';
@@ -62,9 +62,15 @@ const ShowTeachers = () => {
     ];
 
     const rows = teachersList.map((teacher) => {
+        // Support multiple subjects (teachSubjects array) while remaining
+        // backward-compatible with teachSubject single field.
+        const subjectNames = (teacher.teachSubjects && teacher.teachSubjects.length > 0)
+            ? teacher.teachSubjects.map(s => s.subName).join(', ')
+            : (teacher.teachSubject?.subName || null);
+
         return {
             name: teacher.name,
-            teachSubject: teacher.teachSubject?.subName || null,
+            teachSubject: subjectNames,
             teachSclass: teacher.teachSclass.sclassName,
             teachSclassID: teacher.teachSclass._id,
             id: teacher._id,

@@ -7,6 +7,7 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import AnnouncementOutlinedIcon from '@mui/icons-material/AnnouncementOutlined';
 import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
+import FolderIcon from '@mui/icons-material/Folder';
 import { useSelector } from 'react-redux';
 
 const TeacherSideBar = () => {
@@ -28,6 +29,24 @@ const TeacherSideBar = () => {
                         <ClassOutlinedIcon color={location.pathname.startsWith("/Teacher/class") ? 'primary' : 'inherit'} />
                     </ListItemIcon>
                     <ListItemText primary={`Class ${sclassName.sclassName}`} />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Teacher/subject/files">
+                    <ListItemIcon>
+                        <FolderIcon color={location.pathname.startsWith("/Teacher/subject/files") ? 'primary' : 'inherit'} />
+                    </ListItemIcon>
+                    <ListItemText primary="Subject Files" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Teacher/subject/create">
+                    <ListItemIcon>
+                        <FolderIcon color={location.pathname.startsWith("/Teacher/subject/create") ? 'primary' : 'inherit'} />
+                    </ListItemIcon>
+                    <ListItemText primary="Create Subject" />
+                </ListItemButton>
+                <ListItemButton component={Link} to="/Teacher/subject/examResponses">
+                    <ListItemIcon>
+                        <FolderIcon color={location.pathname.startsWith("/Teacher/subject/examResponses") ? 'primary' : 'inherit'} />
+                    </ListItemIcon>
+                    <ListItemText primary="Exam Responses" />
                 </ListItemButton>
                 <ListItemButton component={Link} to="/Teacher/complain">
                     <ListItemIcon>

@@ -66,28 +66,28 @@ const StudentProfile = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
-                <Typography variant="subtitle1" component="p">
+                <Typography variant="subtitle1" component="p"> 
                   <strong>Gender:</strong> Male
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle1" component="p">
-                  <strong>Email:</strong> john.doe@example.com
+                  <strong>Email:</strong> student1@gmail.com
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle1" component="p">
-                  <strong>Phone:</strong> (123) 456-7890
+                  <strong>Phone:</strong> (+237) 678 533 334
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle1" component="p">
-                  <strong>Address:</strong> 123 Main Street, City, Country
+                  <strong>Address:</strong> Omnisport,Yaounde, Cameroon
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Typography variant="subtitle1" component="p">
-                  <strong>Emergency Contact:</strong> (987) 654-3210
+                  <strong>Emergency Contact:</strong> (+237) 678 533 334
                 </Typography>
               </Grid>
             </Grid>

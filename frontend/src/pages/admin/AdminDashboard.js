@@ -30,12 +30,14 @@ import ShowNotices from './noticeRelated/ShowNotices';
 import ShowSubjects from './subjectRelated/ShowSubjects';
 import SubjectForm from './subjectRelated/SubjectForm';
 import ViewSubject from './subjectRelated/ViewSubject';
+import AdminExamResponses from './subjectRelated/AdminExamResponses';
 
 import AddTeacher from './teacherRelated/AddTeacher';
 import ChooseClass from './teacherRelated/ChooseClass';
 import ChooseSubject from './teacherRelated/ChooseSubject';
 import ShowTeachers from './teacherRelated/ShowTeachers';
 import TeacherDetails from './teacherRelated/TeacherDetails';
+import BulkAssignTeachers from './teacherRelated/BulkAssignTeachers';
 
 import AddClass from './classRelated/AddClass';
 import ClassDetails from './classRelated/ClassDetails';
@@ -109,6 +111,7 @@ const AdminDashboard = () => {
 
                         <Route path="/Admin/addsubject/:id" element={<SubjectForm />} />
                         <Route path="/Admin/class/subject/:classID/:subjectID" element={<ViewSubject />} />
+                        <Route path="/Admin/subject/examResponses/:subjectId" element={<AdminExamResponses />} />
 
                         <Route path="/Admin/subject/student/attendance/:studentID/:subjectID" element={<StudentAttendance situation="Subject" />} />
                         <Route path="/Admin/subject/student/marks/:studentID/:subjectID" element={<StudentExamMarks situation="Subject" />} />
@@ -133,6 +136,7 @@ const AdminDashboard = () => {
                         <Route path="/Admin/teachers/choosesubject/:id" element={<ChooseSubject situation="Norm" />} />
                         <Route path="/Admin/teachers/choosesubject/:classID/:teacherID" element={<ChooseSubject situation="Teacher" />} />
                         <Route path="/Admin/teachers/addteacher/:id" element={<AddTeacher />} />
+                        <Route path="/Admin/teachers/bulkassign" element={<BulkAssignTeachers />} />
 
                         <Route path="/logout" element={<Logout />} />
                     </Routes>

@@ -96,7 +96,7 @@ const deleteStudent = async (req, res) => {
         const result = await Student.findByIdAndDelete(req.params.id)
         res.send(result)
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 }
 
@@ -109,7 +109,7 @@ const deleteStudents = async (req, res) => {
             res.send(result)
         }
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 }
 
@@ -122,7 +122,7 @@ const deleteStudentsByClass = async (req, res) => {
             res.send(result)
         }
     } catch (error) {
-        res.status(500).json(err);
+        res.status(500).json(error);
     }
 }
 
@@ -130,7 +130,7 @@ const updateStudent = async (req, res) => {
     try {
         if (req.body.password) {
             const salt = await bcrypt.genSalt(10)
-            res.body.password = await bcrypt.hash(res.body.password, salt)
+            req.body.password = await bcrypt.hash(req.body.password, salt)
         }
         let result = await Student.findByIdAndUpdate(req.params.id,
             { $set: req.body },
@@ -196,8 +196,10 @@ const studentAttendance = async (req, res) => {
                 (a) => a.subName.toString() === subName
             ).length;
 
-            if (attendedSessions >= subject.sessions) {
-                return res.send({ message: 'Maximum attendance limit reached' });
+            const maxSessions = subject ? Number(subject.sessions) || Infinity : Infinity;
+
+            if (attendedSessions >= maxSessions) {
+                return res.status(400).send({ message: 'Maximum attendance limit reached' });
             }
 
             student.attendance.push({ date, status, subName });

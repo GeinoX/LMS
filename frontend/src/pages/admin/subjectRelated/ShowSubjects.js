@@ -35,11 +35,6 @@ const ShowSubjects = () => {
         console.log(address);
         setMessage("Sorry the delete function has been disabled for now.")
         setShowPopup(true)
-
-        // dispatch(deleteUser(deleteID, address))
-        //     .then(() => {
-        //         dispatch(getSubjectList(currentUser._id, "AllSubjects"));
-        //     })
     }
 
     const subjectColumns = [
@@ -48,15 +43,26 @@ const ShowSubjects = () => {
         { id: 'sclassName', label: 'Class', minWidth: 170 },
     ]
 
-    const subjectRows = subjectsList.map((subject) => {
-        return {
-            subName: subject.subName,
-            sessions: subject.sessions,
-            sclassName: subject.sclassName.sclassName,
-            sclassID: subject.sclassName._id,
-            id: subject._id,
-        };
-    })
+    // CORRECTION: Vérification de sécurité pour sclassName
+    const subjectRows = subjectsList && Array.isArray(subjectsList) 
+        ? subjectsList.map((subject) => {
+            // Vérifier que le subject existe
+            if (!subject) return null;
+            
+            // Vérifier que sclassName existe et est un objet
+            const className = subject.sclassName && typeof subject.sclassName === 'object' 
+                ? subject.sclassName.sclassName 
+                : 'No Class';
+            
+            return {
+                subName: subject.subName || 'Unknown',
+                sessions: subject.sessions || 'N/A',
+                sclassName: className,
+                sclassID: subject.sclassName && subject.sclassName._id ? subject.sclassName._id : 'unknown',
+                id: subject._id,
+            };
+        }).filter(row => row !== null) // Filtrer les lignes nulles
+        : [];
 
     const SubjectsButtonHaver = ({ row }) => {
         return (
@@ -65,7 +71,13 @@ const ShowSubjects = () => {
                     <DeleteIcon color="error" />
                 </IconButton>
                 <BlueButton variant="contained"
-                    onClick={() => navigate(`/Admin/subjects/subject/${row.sclassID}/${row.id}`)}>
+                    onClick={() => {
+                        if (row.sclassID && row.sclassID !== 'unknown') {
+                            navigate(`/Admin/subjects/subject/${row.sclassID}/${row.id}`)
+                        } else {
+                            console.error('Invalid class ID for subject:', row.id);
+                        }
+                    }}>
                     View
                 </BlueButton>
             </>
@@ -98,8 +110,12 @@ const ShowSubjects = () => {
                         </Box>
                         :
                         <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-                            {Array.isArray(subjectsList) && subjectsList.length > 0 &&
+                            {Array.isArray(subjectsList) && subjectsList.length > 0 && subjectRows.length > 0 ?
                                 <TableTemplate buttonHaver={SubjectsButtonHaver} columns={subjectColumns} rows={subjectRows} />
+                                :
+                                <Box sx={{ p: 3, textAlign: 'center' }}>
+                                    No subjects found. Add some subjects to get started.
+                                </Box>
                             }
                             <SpeedDialTemplate actions={actions} />
                         </Paper>
@@ -107,7 +123,6 @@ const ShowSubjects = () => {
                 </>
             }
             <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
-
         </>
     );
 };

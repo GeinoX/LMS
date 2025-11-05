@@ -14,12 +14,16 @@ const TeacherViewStudent = () => {
     const navigate = useNavigate()
     const params = useParams()
     const dispatch = useDispatch();
-    const { currentUser, userDetails, response, loading, error } = useSelector((state) => state.user);
+    const { currentUser, userDetails, response, loading, error, activeSubjectId } = useSelector((state) => state.user);
 
     const address = "Student"
     const studentID = params.id
-    const teachSubject = currentUser.teachSubject?.subName
-    const teachSubjectID = currentUser.teachSubject?._id
+    // Resolve active subject name/id using activeSubjectId, fallback to legacy fields
+    const activeSubject = activeSubjectId
+        ? (currentUser?.teachSubjects || []).find(s => String(s._id) === String(activeSubjectId))
+        : (currentUser?.teachSubject || (currentUser?.teachSubjects && currentUser.teachSubjects[0]));
+    const teachSubject = activeSubject?.subName
+    const teachSubjectID = activeSubject?._id
 
     useEffect(() => {
         dispatch(getUserDetails(studentID, address));

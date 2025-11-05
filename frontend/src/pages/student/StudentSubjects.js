@@ -4,11 +4,14 @@ import { getSubjectList } from '../../redux/sclassRelated/sclassHandle';
 import { BottomNavigation, BottomNavigationAction, Container, Paper, Table, TableBody, TableHead, Typography } from '@mui/material';
 import { getUserDetails } from '../../redux/userRelated/userHandle';
 import CustomBarChart from '../../components/CustomBarChart'
+import StudentSubjectFilesTable from '../../components/StudentSubjectFilesTable';
 
 import InsertChartIcon from '@mui/icons-material/InsertChart';
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import FolderIcon from '@mui/icons-material/Folder';
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined';
 import { StyledTableCell, StyledTableRow } from '../../components/styles';
 
 const StudentSubjects = () => {
@@ -19,7 +22,10 @@ const StudentSubjects = () => {
 
     useEffect(() => {
         dispatch(getUserDetails(currentUser._id, "Student"));
-    }, [dispatch, currentUser._id])
+        if (currentUser.sclassName && currentUser.sclassName._id) {
+            dispatch(getSubjectList(currentUser.sclassName._id, "ClassSubjects"));
+        }
+    }, [dispatch, currentUser._id, currentUser.sclassName])
 
     if (response) { console.log(response) }
     else if (error) { console.log(error) }
@@ -81,23 +87,34 @@ const StudentSubjects = () => {
     const renderClassDetailsSection = () => {
         return (
             <Container>
-                <Typography variant="h4" align="center" gutterBottom>
-                    Class Details
+                <Typography variant="h4" align="center" gutterBottom sx={{ mb: 3, color: '#1976d2' }}>
+                    Détails de la Classe
                 </Typography>
-                <Typography variant="h5" gutterBottom>
-                    You are currently in Class {sclassDetails && sclassDetails.sclassName}
+                <Typography variant="h5" gutterBottom sx={{ mb: 3 }}>
+                    Vous êtes actuellement dans la classe {sclassDetails && sclassDetails.sclassName}
                 </Typography>
-                <Typography variant="h6" gutterBottom>
-                    And these are the subjects:
-                </Typography>
-                {subjectsList &&
-                    subjectsList.map((subject, index) => (
-                        <div key={index}>
-                            <Typography variant="subtitle1">
-                                {subject.subName} ({subject.subCode})
-                            </Typography>
-                        </div>
-                    ))}
+
+                {subjectsList && subjectsList.length > 0 ? (
+                    <StudentSubjectFilesTable subjects={subjectsList} />
+                ) : (
+                    <Typography variant="body1" color="textSecondary">
+                        Aucun subject disponible
+                    </Typography>
+                )}
+            </Container>
+        );
+    };
+
+    const renderFilesSection = () => {
+        return (
+            <Container>
+                {subjectsList && subjectsList.length > 0 ? (
+                    <StudentSubjectFilesTable subjects={subjectsList} />
+                ) : (
+                    <Typography variant="body1" color="textSecondary" align="center">
+                        Aucun subject disponible
+                    </Typography>
+                )}
             </Container>
         );
     };
@@ -113,18 +130,24 @@ const StudentSubjects = () => {
                         (<>
                             {selectedSection === 'table' && renderTableSection()}
                             {selectedSection === 'chart' && renderChartSection()}
+                            {selectedSection === 'files' && renderFilesSection()}
 
                             <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
                                 <BottomNavigation value={selectedSection} onChange={handleSectionChange} showLabels>
                                     <BottomNavigationAction
-                                        label="Table"
+                                        label="Notes"
                                         value="table"
                                         icon={selectedSection === 'table' ? <TableChartIcon /> : <TableChartOutlinedIcon />}
                                     />
                                     <BottomNavigationAction
-                                        label="Chart"
+                                        label="Graphique"
                                         value="chart"
                                         icon={selectedSection === 'chart' ? <InsertChartIcon /> : <InsertChartOutlinedIcon />}
+                                    />
+                                    <BottomNavigationAction
+                                        label="Fichiers"
+                                        value="files"
+                                        icon={selectedSection === 'files' ? <FolderIcon /> : <FolderOutlinedIcon />}
                                     />
                                 </BottomNavigation>
                             </Paper>

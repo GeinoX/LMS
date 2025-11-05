@@ -23,10 +23,12 @@ const teacherSchema = new mongoose.Schema({
         ref: 'admin',
         required: true,
     },
-    teachSubject: {
+    // Support multiple subjects per teacher (array). Keep a virtual `teachSubject`
+    // for backward-compatibility with frontend code that expects a single subject.
+    teachSubjects: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'subject',
-    },
+    }],
     teachSclass: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'sclass',
@@ -44,6 +46,19 @@ const teacherSchema = new mongoose.Schema({
             type: String,
         }
     }]
-}, { timestamps: true });
+}, {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true }
+});
+
+// Virtual for backward compatibility: return first subject from teachSubjects
+teacherSchema.virtual('teachSubject').get(function () {
+    if (!this.teachSubjects) return undefined;
+    // If populated, return populated doc; otherwise return the id
+    return Array.isArray(this.teachSubjects) && this.teachSubjects.length > 0
+        ? this.teachSubjects[0]
+        : undefined;
+});
 
 module.exports = mongoose.model("teacher", teacherSchema)

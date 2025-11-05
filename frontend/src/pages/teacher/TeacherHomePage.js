@@ -1,4 +1,4 @@
-import { Container, Grid, Paper } from '@mui/material'
+import { Container, Grid, Paper, FormControl, InputLabel, Select, MenuItem, Button, Card, CardContent } from '@mui/material'
 import SeeNotice from '../../components/SeeNotice';
 import CountUp from 'react-countup';
 import styled from 'styled-components';
@@ -9,20 +9,59 @@ import Time from "../../assets/time.svg";
 import { getClassStudents, getSubjectDetails } from '../../redux/sclassRelated/sclassHandle';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
+import { setActiveSubject } from '../../redux/userRelated/userSlice';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const TeacherHomePage = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { currentUser } = useSelector((state) => state.user);
     const { subjectDetails, sclassStudents } = useSelector((state) => state.sclass);
 
     const classID = currentUser.teachSclass?._id
-    const subjectID = currentUser.teachSubject?._id
+    // Use global active subject from Redux (set on login or by selector)
+    const activeSubjectID = useSelector(state => state.user.activeSubjectId);
 
     useEffect(() => {
-        dispatch(getSubjectDetails(subjectID, "Subject"));
-        dispatch(getClassStudents(classID));
-    }, [dispatch, subjectID, classID]);
+        // Refresh teacher subjects on mount to include admin-assigned changes
+        (async () => {
+            try {
+                if (currentUser?.role === 'Teacher' && currentUser?._id) {
+                    const refreshed = await axios.get(`${process.env.REACT_APP_BASE_URL}/Teacher/${currentUser._id}`);
+                    if (refreshed.data) {
+                        console.log('🔄 TEACHER PAGE REFRESH: Updating localStorage with fresh data (session isolated)');
+
+                        // Update localStorage with session isolation
+                        const sessionId = localStorage.getItem('sessionId');
+                        const userData = {
+                            ...refreshed.data,
+                            sessionId: sessionId,
+                            timestamp: Date.now()
+                        };
+                        localStorage.setItem('user', JSON.stringify(userData));
+
+                        // If active subject is missing or not in list, set to first subject
+                        const list = Array.isArray(refreshed.data.teachSubjects) ? refreshed.data.teachSubjects : [];
+                        console.log('🔄 TEACHER PAGE REFRESH: Available subjects:', list);
+                        if (!activeSubjectID || !list.some(s => String(s._id) === String(activeSubjectID))) {
+                            if (list.length > 0) {
+                                console.log('🔄 TEACHER PAGE REFRESH: Setting active subject to first available:', list[0]._id);
+                                dispatch(setActiveSubject(String(list[0]._id)));
+                            }
+                        }
+                    }
+                }
+            } catch (e) {
+                // non-blocking
+                console.warn('Teacher refresh failed:', e?.message || e);
+            } finally {
+                if (activeSubjectID) dispatch(getSubjectDetails(activeSubjectID, "Subject"));
+                if (classID) dispatch(getClassStudents(classID));
+            }
+        })();
+    }, [dispatch, activeSubjectID, classID, currentUser]);
 
     const numberOfStudents = sclassStudents && sclassStudents.length;
     const numberOfSessions = subjectDetails && subjectDetails.sessions
@@ -30,6 +69,42 @@ const TeacherHomePage = () => {
     return (
         <>
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+                {currentUser.teachSubjects && currentUser.teachSubjects.length > 1 && (
+                    <FormControl sx={{ minWidth: 240, mb: 2 }}>
+                        <InputLabel id="active-subject-label">Active Subject</InputLabel>
+                        <Select
+                            labelId="active-subject-label"
+                            value={activeSubjectID || ''}
+                            label="Active Subject"
+                            onChange={(e) => dispatch(setActiveSubject(e.target.value))}
+                        >
+                            {currentUser.teachSubjects.map((s) => (
+                                <MenuItem key={s._id} value={s._id}>{s.subName}</MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                )}
+                {/* Mes matières */}
+                {currentUser?.teachSubjects && currentUser.teachSubjects.length > 0 && (
+                    <Grid container spacing={2} sx={{ mb: 3 }}>
+                        {currentUser.teachSubjects.map((s) => (
+                            <Grid item xs={12} sm={6} md={4} key={s._id}>
+                                <Card>
+                                    <CardContent>
+                                        <p style={{ fontWeight: 600, margin: 0 }}>{s.subName}</p>
+                                        {s.sessions !== undefined && (
+                                            <p style={{ color: '#666', margin: '4px 0' }}>Sessions: {s.sessions}</p>
+                                        )}
+                                        <Button size="small" variant="outlined" onClick={() => { dispatch(setActiveSubject(s._id)); navigate('/Teacher/subject/files'); }}>
+                                            Voir fichiers
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
+
                 <Grid container spacing={3}>
                     <Grid item xs={12} md={3} lg={3}>
                         <StyledPaper>

@@ -252,6 +252,32 @@ const LoginPage = ({ role }) => {
                                     </Grid>
                                 </Grid>
                             }
+
+                            {role === "Student" &&
+                                <Grid container>
+                                    <Grid>
+                                        Don't have an account?
+                                    </Grid>
+                                    <Grid item sx={{ ml: 2 }}>
+                                        <StyledLink to="/Studentregister">
+                                            Sign up
+                                        </StyledLink>
+                                    </Grid>
+                                </Grid>
+                            }
+
+                            {role === "Teacher" &&
+                                <Grid container>
+                                    <Grid>
+                                        Don't have an account?
+                                    </Grid>
+                                    <Grid item sx={{ ml: 2 }}>
+                                        <StyledLink to="/Teacherregister">
+                                            Sign up
+                                        </StyledLink>
+                                    </Grid>
+                                </Grid>
+                            }
                         </Box>
                     </Box>
                 </Grid>

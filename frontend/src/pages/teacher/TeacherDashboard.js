@@ -22,6 +22,9 @@ import TeacherComplain from './TeacherComplain';
 import TeacherHomePage from './TeacherHomePage';
 import TeacherProfile from './TeacherProfile';
 import TeacherViewStudent from './TeacherViewStudent';
+import TeacherSubjectFiles from './TeacherSubjectFiles';
+import TeacherCreateSubject from './TeacherCreateSubject';
+import TeacherExamResponses from './TeacherExamResponses';
 import StudentExamMarks from '../admin/studentRelated/StudentExamMarks';
 
 const TeacherDashboard = () => {
@@ -83,6 +86,10 @@ const TeacherDashboard = () => {
 
                         <Route path="/Teacher/class" element={<TeacherClassDetails />} />
                         <Route path="/Teacher/class/student/:id" element={<TeacherViewStudent />} />
+
+                        <Route path="/Teacher/subject/files" element={<TeacherSubjectFiles />} />
+                        <Route path="/Teacher/subject/create" element={<TeacherCreateSubject />} />
+                        <Route path="/Teacher/subject/examResponses" element={<TeacherExamResponses />} />
 
                         <Route path="/Teacher/class/student/attendance/:studentID/:subjectID" element={<StudentAttendance situation="Subject" />} />
                         <Route path="/Teacher/class/student/marks/:studentID/:subjectID" element={<StudentExamMarks situation="Subject" />} />
